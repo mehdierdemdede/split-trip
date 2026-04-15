@@ -33,6 +33,9 @@ yarn-error.*
 # local env files
 .env*.local
 
+# Store submit secrets (service account JSON, optional local copies)
+/credentials/
+
 # typescript
 *.tsbuildinfo
 

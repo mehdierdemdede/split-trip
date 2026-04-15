@@ -1,35 +1,73 @@
+import { Link } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { Platform, StyleSheet } from 'react-native';
+import { Platform, Pressable, StyleSheet, View as RNView } from 'react-native';
 
-import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
+import Colors from '@/constants/Colors';
+import { Radii, Spacing, displayTitle, sectionKicker, shadowCard } from '@/constants/theme';
+import { useColorScheme } from '@/components/useColorScheme';
 
 export default function ModalScreen() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Modal</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/modal.tsx" />
+  const colorScheme = useColorScheme() ?? 'light';
+  const c = Colors[colorScheme];
 
-      {/* Use a light status bar on iOS to account for the black space above the modal */}
+  return (
+    <View style={styles.screen}>
+      <RNView style={[styles.card, { backgroundColor: c.surface, borderColor: c.border }, shadowCard]}>
+        <RNView style={[styles.accentBar, { backgroundColor: c.accentLine }]} />
+        <RNView style={styles.cardInner}>
+          <Text style={[sectionKicker, { color: c.tint, marginBottom: Spacing.sm }]}>About</Text>
+          <Text style={[displayTitle, { color: c.text, fontSize: 28, lineHeight: 34 }]}>SplitTrip</Text>
+          <Text style={[styles.body, { color: c.textSecondary }]}>
+            Trip-first group expenses and settlement. The goal is less tension, not accounting perfection: quick
+            entry, transparent splits, and the fewest transfers to settle up.
+          </Text>
+          <Link href="/privacy" asChild>
+            <Pressable style={({ pressed }) => [styles.linkBtn, pressed && { opacity: 0.7 }]}>
+              <Text style={[styles.linkText, { color: c.tint }]}>Privacy & data</Text>
+            </Pressable>
+          </Link>
+          <Link href="/backup-import" asChild>
+            <Pressable style={({ pressed }) => [styles.linkBtn, pressed && { opacity: 0.7 }]}>
+              <Text style={[styles.linkText, { color: c.tint }]}>Import trip from backup</Text>
+            </Pressable>
+          </Link>
+        </RNView>
+      </RNView>
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  screen: {
     flex: 1,
-    alignItems: 'center',
+    padding: Spacing.lg,
     justifyContent: 'center',
   },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
+  card: {
+    borderRadius: Radii.xl,
+    borderWidth: 1,
+    overflow: 'hidden',
   },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
+  accentBar: {
+    height: 4,
+    width: '100%',
+  },
+  cardInner: {
+    padding: Spacing.lg,
+  },
+  body: {
+    fontSize: 16,
+    lineHeight: 25,
+    marginBottom: Spacing.md,
+  },
+  linkBtn: {
+    paddingVertical: 12,
+    alignSelf: 'flex-start',
+  },
+  linkText: {
+    fontSize: 16,
+    fontWeight: '700',
   },
 });
